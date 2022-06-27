@@ -8,7 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+
 
 @Entity
 @Table(name = "users")
@@ -28,15 +29,17 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
+    @Enumerated(EnumType.STRING)
     private UserRole role;
+
 
     public User() {
     }
 
-    public User(Long id, String name, String lastName, String email, String password, UserRole role) {
+    public User(Long id, String name, String lastname, String email, String password, UserRole role) {
         this.id = id;
         this.name = name;
-        this.lastname = lastName;
+        this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -44,6 +47,10 @@ public class User implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -69,10 +76,18 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
+    public UserRole getRole() {
+        return this.role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.getRole().name()));
+        return Collections.singletonList(
+                new SimpleGrantedAuthority(this.role.name()));
     }
 
     public String getPassword() {
@@ -108,11 +123,4 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public UserRole getRole() {
-        return role;
-    }
-
-    public void setRole(UserRole role) {
-        this.role = role;
-    }
 }

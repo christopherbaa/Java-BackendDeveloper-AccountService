@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
-    boolean existsUserByEmail(String email);
-    User findUserByEmail(String email);
+    boolean existsUserByEmailIgnoreCase(String email);
+    User findUserByEmailIgnoreCase(String email);
 }

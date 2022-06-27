@@ -3,6 +3,8 @@ package com.example.jetbrainsbackenddeveloperaccountservice.dto;
 import com.example.jetbrainsbackenddeveloperaccountservice.model.User;
 
 public class UserRegistrationDto {
+
+    private Long id;
     private String name;
     private String lastname;
     private String email;
@@ -11,9 +13,18 @@ public class UserRegistrationDto {
     }
 
     public UserRegistrationDto(User user) {
+        this.id = user.getId();
         this.name = user.getName();
         this.lastname = user.getLastname();
         this.email = user.getEmail();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -18,7 +18,7 @@ public class UserMapper {
         newUser.setName(user.getName());
         newUser.setLastname(user.getLastname());
         newUser.setEmail(user.getEmail());
-        newUser.setRole(UserRole.ROLE_USER);
+        newUser.setRole(UserRole.USER);
         newUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return newUser;
     }
