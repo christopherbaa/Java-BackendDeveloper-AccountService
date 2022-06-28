@@ -4,6 +4,8 @@ import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserChangePassReq
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserPassChangedDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserRegistrationDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.exception.EmailExistsException;
+import com.example.jetbrainsbackenddeveloperaccountservice.exception.PasswordIsCompromisedException;
+import com.example.jetbrainsbackenddeveloperaccountservice.exception.PasswordMatchesException;
 import com.example.jetbrainsbackenddeveloperaccountservice.model.User;
 import com.example.jetbrainsbackenddeveloperaccountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +34,15 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserRegistrationDto> registerUser(@Valid @RequestBody User user) throws EmailExistsException {
+    public ResponseEntity<UserRegistrationDto> registerUser(@Valid @RequestBody User user) throws
+            EmailExistsException,
+            PasswordIsCompromisedException {
         return new ResponseEntity<>(this.userService.registerUser(user), HttpStatus.OK);
     }
 
     @PostMapping("/changepass")
-    public ResponseEntity<UserPassChangedDto> changePass(Principal user,
-                                                         @Valid @RequestBody UserChangePassRequestDto newPass) {
+    public ResponseEntity<UserPassChangedDto> changePass(Principal user, @Valid @RequestBody UserChangePassRequestDto newPass)
+            throws PasswordMatchesException, PasswordIsCompromisedException {
         return user != null ? new ResponseEntity<>(
                 this.userService.changePassword(this.userService.findUserByEmail(user.getName()), newPass.getNew_password()),
                 HttpStatus.OK) :
