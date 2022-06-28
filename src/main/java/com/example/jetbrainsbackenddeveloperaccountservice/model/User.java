@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -19,14 +20,15 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    @NotBlank
+    @NotBlank(message = "Name is required!")
     private String name;
-    @NotBlank
+    @NotBlank(message = "Lastname is required!")
     private String lastname;
-    @NotBlank
-    @Pattern(regexp = "[A-Za-z\\d+_.-]+@acme\\.com")
+    @NotBlank(message = "Email is required!")
+    @Pattern(regexp = "[A-Za-z\\d+_.-]+@acme\\.com", message = "Must be valid organisation email!")
     private String email;
-    @NotBlank
+    @NotBlank(message = "Password is required!")
+    @Size(min = 12, message = "Password length must be 12 chars minimum!")
     private String password;
 
     @Enumerated(EnumType.STRING)

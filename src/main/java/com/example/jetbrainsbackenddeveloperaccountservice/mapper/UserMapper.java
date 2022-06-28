@@ -22,4 +22,5 @@ public class UserMapper {
         newUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return newUser;
     }
+
 }
