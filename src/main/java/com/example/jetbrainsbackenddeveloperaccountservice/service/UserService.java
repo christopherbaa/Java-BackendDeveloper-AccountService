@@ -7,8 +7,8 @@ import com.example.jetbrainsbackenddeveloperaccountservice.mapper.UserMapper;
 import com.example.jetbrainsbackenddeveloperaccountservice.model.User;
 
 public interface UserService {
-    UserRegistrationDto registerUser(User user);
-    UserMapper getUserMapper();
-    User findUserByEmail(String email);
-    UserPassChangedDto changePassword(User user, String newPass);
+    public UserRegistrationDto registerUser(User user);
+    public UserMapper getUserMapper();
+    public User findUserByEmail(String email);
+    public UserPassChangedDto changePassword(User user, String newPass);
 }

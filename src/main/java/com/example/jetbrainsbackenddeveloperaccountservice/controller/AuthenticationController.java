@@ -34,9 +34,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserRegistrationDto> registerUser(@Valid @RequestBody User user) throws
-            EmailExistsException,
-            PasswordIsCompromisedException {
+    public ResponseEntity<UserRegistrationDto> registerUser(@Valid @RequestBody User user)
+            throws EmailExistsException, PasswordIsCompromisedException {
         return new ResponseEntity<>(this.userService.registerUser(user), HttpStatus.OK);
     }
 

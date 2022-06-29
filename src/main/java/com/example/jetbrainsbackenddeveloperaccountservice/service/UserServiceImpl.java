@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 throw new EmailExistsException();
             }
             this.userRepository.save(userMapper.toUserWithEncryptedPw(user));
-            return userMapper.toUserRegistrationDto(this.userRepository.findUserByEmailIgnoreCase(user.getEmail()));
+            return userMapper.toUserRegistrationDto(this.findUserByEmail(user.getEmail()));
         }
         throw new PasswordIsCompromisedException();
     }
@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if(!this.userRepository.existsUserByEmailIgnoreCase(email)) {
             throw new UsernameNotFoundException(email);
         }
-        return this.userRepository.findUserByEmailIgnoreCase(email);
+        return this.findUserByEmail(email);
     }
 
     @Override
@@ -66,9 +66,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserPassChangedDto changePassword(User user, String newPass) {
         if(!isCompromised(newPass)) {
-            String oldPass = this.userRepository.findUserByEmailIgnoreCase(user.getEmail()).getPassword();
+            String oldPass = this.findUserByEmail(user.getEmail()).getPassword();
             if(!bCryptPasswordEncoder.matches(newPass, oldPass)) {
-                user.setId(this.userRepository.findUserByEmailIgnoreCase(user.getEmail()).getId());
+                user.setId(this.findUserByEmail(user.getEmail()).getId());
                 user.setPassword(bCryptPasswordEncoder.encode(newPass));
                 this.userRepository.save(user);
                 return new UserPassChangedDto(user);
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         throw new PasswordIsCompromisedException();
     }
 
-    public boolean isCompromised(String password) {
+    private boolean isCompromised(String password) {
         ArrayList<String> compromisedPasswords = new ArrayList<>(List.of(
                 "PasswordForJanuary", "PasswordForFebruary", "PasswordForMarch", "PasswordForApril",
                 "PasswordForMay", "PasswordForJune", "PasswordForJuly", "PasswordForAugust",
