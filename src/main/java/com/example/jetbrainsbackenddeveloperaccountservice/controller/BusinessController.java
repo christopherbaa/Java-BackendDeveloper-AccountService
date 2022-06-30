@@ -1,5 +1,6 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.controller;
 
+import com.example.jetbrainsbackenddeveloperaccountservice.dto.PaymentDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserRegistrationDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.mapper.UserMapper;
 import com.example.jetbrainsbackenddeveloperaccountservice.service.UserService;
@@ -7,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.ArrayList;
 
 /*
     GET api/empl/payment gives access to the employee's payrolls;
@@ -34,6 +38,11 @@ public class BusinessController {
                 new UserRegistrationDto(this.userService.findUserByEmail(user.getName())),
                 HttpStatus.OK) :
                 new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    @PostMapping("/api/acct/payments")
+    public ResponseEntity<ArrayList<PaymentDto>> postPayments(@RequestBody ArrayList<PaymentDto> payments) {
+        return new ResponseEntity<>(payments, HttpStatus.OK);
     }
 
 }

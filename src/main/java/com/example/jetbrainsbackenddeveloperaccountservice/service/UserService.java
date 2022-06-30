@@ -11,4 +11,5 @@ public interface UserService {
     public UserMapper getUserMapper();
     public User findUserByEmail(String email);
     public UserPassChangedDto changePassword(User user, String newPass);
+    public boolean existsByEmail(String email);
 }

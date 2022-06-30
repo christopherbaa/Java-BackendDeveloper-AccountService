@@ -78,6 +78,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         throw new PasswordIsCompromisedException();
     }
 
+    @Override
+    public boolean existsByEmail(String email) {
+        return this.userRepository.existsUserByEmailIgnoreCase(email);
+    }
+
     private boolean isCompromised(String password) {
         ArrayList<String> compromisedPasswords = new ArrayList<>(List.of(
                 "PasswordForJanuary", "PasswordForFebruary", "PasswordForMarch", "PasswordForApril",

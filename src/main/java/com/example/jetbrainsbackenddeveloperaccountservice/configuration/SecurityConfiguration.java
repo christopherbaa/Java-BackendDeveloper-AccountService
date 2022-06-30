@@ -21,7 +21,7 @@ public class SecurityConfiguration {
                 .csrf().disable().headers().frameOptions().disable()
                 .and()
                 .authorizeRequests()
-                .mvcMatchers("/api/auth/signup").anonymous()
+                .mvcMatchers("/api/auth/signup", "/api/acct/payments").anonymous()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
