@@ -16,25 +16,34 @@ public class Payment {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User employee;
+    private User user;
     private LocalDateTime period;
     private Long salary;
 
     public Payment() {
     }
 
-    public Payment(User employee, LocalDateTime period, Long salary) {
-        this.employee = employee;
+    public Payment(Long id, User user, LocalDateTime period, Long salary) {
+        this.id = id;
+        this.user = user;
         this.period = period;
         this.salary = salary;
     }
 
-    public User getEmployee() {
-        return employee;
+    public Long getId() {
+        return id;
     }
 
-    public void setEmployee(User employee) {
-        this.employee = employee;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getEmployee() {
+        return user;
+    }
+
+    public void setEmployee(User user) {
+        this.user = user;
     }
 
     public LocalDateTime getPeriod() {

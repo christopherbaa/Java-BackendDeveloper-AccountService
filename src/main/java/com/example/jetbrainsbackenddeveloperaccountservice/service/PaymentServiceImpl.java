@@ -27,6 +27,21 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public void savePayments(ArrayList<PaymentDto> payments) {
-        payments.stream().allMatch(payment -> userService.existsByEmail(payment.getEmail()));
+
+    }
+
+    @Override
+    public boolean hasValidUser(PaymentDto paymentDto) {
+        return this.userService.existsByEmail(paymentDto.getEmail());
+    }
+
+    @Override
+    public boolean hasValidPeriod(PaymentDto paymentDto) {
+        return false;
+    }
+
+    @Override
+    public boolean hasValidSalary(PaymentDto paymentDto) {
+        return paymentDto.getSalary() > 0;
     }
 }
