@@ -3,15 +3,19 @@ package com.example.jetbrainsbackenddeveloperaccountservice.controller;
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.PaymentDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserRegistrationDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.mapper.UserMapper;
+import com.example.jetbrainsbackenddeveloperaccountservice.model.Payment;
+import com.example.jetbrainsbackenddeveloperaccountservice.service.PaymentService;
 import com.example.jetbrainsbackenddeveloperaccountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 
@@ -20,15 +24,20 @@ import java.util.ArrayList;
     POST api/acct/payments uploads payrolls;
     PUT api/acct/payments updates payment information.
 */
+@Validated
 @RestController
 public class BusinessController {
 
     private final UserService userService;
+
+    private final PaymentService paymentService;
     private final UserMapper userMapper;
 
     public BusinessController(@Autowired UserService userService,
+                              @Autowired PaymentService paymentService,
                               @Autowired UserMapper userMapper) {
         this.userService = userService;
+        this.paymentService = paymentService;
         this.userMapper = userMapper;
     }
 
@@ -41,8 +50,15 @@ public class BusinessController {
     }
 
     @PostMapping("/api/acct/payments")
-    public ResponseEntity<ArrayList<PaymentDto>> postPayments(@RequestBody ArrayList<PaymentDto> payments) {
+    public ResponseEntity<ArrayList<PaymentDto>> postPayments(@Valid @RequestBody ArrayList<PaymentDto> payments) {
+        this.paymentService.savePayments(payments);
         return new ResponseEntity<>(payments, HttpStatus.OK);
+    }
+
+    // TODO Delete later
+    @GetMapping("/api/acct/payments")
+    public ArrayList<Payment> getPayments() {
+        return null;
     }
 
 }

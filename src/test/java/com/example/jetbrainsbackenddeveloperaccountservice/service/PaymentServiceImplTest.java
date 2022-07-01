@@ -16,16 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceImplTest {
 
-    ArrayList<PaymentDto> paymentsWithDistinctPeriodsAndPositiveSalary;
-    ArrayList<PaymentDto> paymentsWithoutDistinctPeriodsAndNegativeSalary;
-
     @Mock
     UserService userService;
     @Mock
     PaymentRepository paymentRepository;
-
     @InjectMocks
     PaymentServiceImpl paymentService;
+
+    ArrayList<PaymentDto> paymentsWithDistinctPeriodsAndPositiveSalary;
+    ArrayList<PaymentDto> paymentsWithoutDistinctPeriodsAndNegativeSalary;
 
     @BeforeEach
     void setUp() {

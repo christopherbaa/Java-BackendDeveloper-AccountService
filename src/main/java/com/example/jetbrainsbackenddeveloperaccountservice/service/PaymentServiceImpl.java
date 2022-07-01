@@ -30,9 +30,17 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public void savePayments(ArrayList<PaymentDto> payments) {
-
+        if(hasDistinctPeriods(payments)) {
+            if(payments.stream().allMatch(p -> hasValidUser(p) && hasPositiveSalary(p))) {
+                payments.stream().forEach(p -> this.paymentRepository.save(
+                        paymentMapper.toPayment(p, this.userService.findUserByEmail(p.getEmail()))
+                ));
+            }
+        }
     }
 
+    // TODO These Should Throw Exceptions
+    // TODO Delete hasPositiveSalary -> Its already checked in PaymentDto
     @Override
     public boolean hasValidUser(PaymentDto paymentDto) {
         return this.userService.existsByEmail(paymentDto.getEmail());

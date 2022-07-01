@@ -1,6 +1,7 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,14 +16,21 @@ public class Payment {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    private LocalDateTime period;
+    @Column(columnDefinition = "DATE")
+    private LocalDate period;
     private Long salary;
 
     public Payment() {
     }
 
-    public Payment(Long id, User user, LocalDateTime period, Long salary) {
+    public Payment(Long id, User user, LocalDate period, Long salary) {
         this.id = id;
+        this.user = user;
+        this.period = period;
+        this.salary = salary;
+    }
+
+    public Payment(User user, LocalDate period, Long salary) {
         this.user = user;
         this.period = period;
         this.salary = salary;
@@ -44,11 +52,19 @@ public class Payment {
         this.user = user;
     }
 
-    public LocalDateTime getPeriod() {
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDate getPeriod() {
         return period;
     }
 
-    public void setPeriod(LocalDateTime period) {
+    public void setPeriod(LocalDate period) {
         this.period = period;
     }
 

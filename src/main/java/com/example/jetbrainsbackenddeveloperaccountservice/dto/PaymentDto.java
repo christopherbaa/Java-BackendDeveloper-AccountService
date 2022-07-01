@@ -1,16 +1,22 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.dto;
 
-import com.example.jetbrainsbackenddeveloperaccountservice.model.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 public class PaymentDto {
 
 
+    @JsonProperty("employee")
+    @NotBlank(message = "Employee is required!")
     private String email;
-    // TODO REGEX PATTERN XX-XXXX
+
+    @Pattern(regexp = "^(0[1-9]|1[0-2])-(\\d{4})$", message = "Period must be a valid format")
     private String period;
+
+    @Min(value = 0, message = "Salary must be positive")
     private Long salary;
 
     public PaymentDto() {
