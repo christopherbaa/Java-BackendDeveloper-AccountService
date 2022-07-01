@@ -1,9 +1,6 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.controller;
 
-import com.example.jetbrainsbackenddeveloperaccountservice.exception.CustomErrorMessage;
-import com.example.jetbrainsbackenddeveloperaccountservice.exception.EmailExistsException;
-import com.example.jetbrainsbackenddeveloperaccountservice.exception.PasswordIsCompromisedException;
-import com.example.jetbrainsbackenddeveloperaccountservice.exception.PasswordMatchesException;
+import com.example.jetbrainsbackenddeveloperaccountservice.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +55,36 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .setStatus(HttpStatus.BAD_REQUEST.value())
                 .setError(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .setMessage("The password is in the hacker's database!")
+                .setPath(request.getDescription(false).replace("uri=", ""))
+                .build();
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserDoesNotExistException.class)
+    public ResponseEntity<CustomErrorMessage> handleUserDoesNotExist(
+            UserDoesNotExistException e, WebRequest request) {
+
+        CustomErrorMessage body = new CustomErrorMessage.Builder()
+                .setTimestamp(LocalDateTime.now())
+                .setStatus(HttpStatus.BAD_REQUEST.value())
+                .setError(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .setMessage(e.getMessage() + " not found!")
+                .setPath(request.getDescription(false).replace("uri=", ""))
+                .build();
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoDistinctPeriodsException.class)
+    public ResponseEntity<CustomErrorMessage> handleNoDistinctPeriods(
+            NoDistinctPeriodsException e, WebRequest request) {
+
+        CustomErrorMessage body = new CustomErrorMessage.Builder()
+                .setTimestamp(LocalDateTime.now())
+                .setStatus(HttpStatus.BAD_REQUEST.value())
+                .setError(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .setMessage(e.getMessage())
                 .setPath(request.getDescription(false).replace("uri=", ""))
                 .build();
 

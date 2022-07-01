@@ -1,6 +1,7 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.controller;
 
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.PaymentDto;
+import com.example.jetbrainsbackenddeveloperaccountservice.dto.StatusMessage;
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserRegistrationDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.mapper.UserMapper;
 import com.example.jetbrainsbackenddeveloperaccountservice.model.Payment;
@@ -50,9 +51,9 @@ public class BusinessController {
     }
 
     @PostMapping("/api/acct/payments")
-    public ResponseEntity<ArrayList<PaymentDto>> postPayments(@Valid @RequestBody ArrayList<PaymentDto> payments) {
+    public ResponseEntity<StatusMessage> postPayments(@Valid @RequestBody ArrayList<PaymentDto> payments) {
         this.paymentService.savePayments(payments);
-        return new ResponseEntity<>(payments, HttpStatus.OK);
+        return new ResponseEntity<>(new StatusMessage("Added successfully!"), HttpStatus.OK);
     }
 
     // TODO Delete later

@@ -13,10 +13,10 @@ public class PaymentDto {
     @NotBlank(message = "Employee is required!")
     private String email;
 
-    @Pattern(regexp = "^(0[1-9]|1[0-2])-(\\d{4})$", message = "Period must be a valid format")
+    @Pattern(regexp = "^(0[1-9]|1[0-2])-(\\d{4})$", message = "Period must be mm-yyyy")
     private String period;
 
-    @Min(value = 0, message = "Salary must be positive")
+    @Min(value = 0, message = "Salary must be positive!")
     private Long salary;
 
     public PaymentDto() {

@@ -1,6 +1,8 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.service;
 
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.PaymentDto;
+import com.example.jetbrainsbackenddeveloperaccountservice.exception.NoDistinctPeriodsException;
+import com.example.jetbrainsbackenddeveloperaccountservice.exception.UserDoesNotExistException;
 import com.example.jetbrainsbackenddeveloperaccountservice.mapper.PaymentMapper;
 import com.example.jetbrainsbackenddeveloperaccountservice.repository.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -42,13 +44,19 @@ public class PaymentServiceImpl implements PaymentService {
     // TODO These Should Throw Exceptions
     // TODO Delete hasPositiveSalary -> Its already checked in PaymentDto
     @Override
-    public boolean hasValidUser(PaymentDto paymentDto) {
-        return this.userService.existsByEmail(paymentDto.getEmail());
+    public boolean hasValidUser(PaymentDto paymentDto) throws UserDoesNotExistException {
+        if(!this.userService.existsByEmail(paymentDto.getEmail())) {
+            throw new UserDoesNotExistException(paymentDto.getEmail());
+        }
+        return true;
     }
 
     @Override
-    public boolean hasDistinctPeriods(ArrayList<PaymentDto> paymentDtos) {
-        return paymentDtos.stream().map(PaymentDto::getPeriod).distinct().count() == paymentDtos.size();
+    public boolean hasDistinctPeriods(ArrayList<PaymentDto> paymentDtos) throws NoDistinctPeriodsException {
+        if(paymentDtos.stream().map(PaymentDto::getPeriod).distinct().count() != paymentDtos.size()) {
+            throw new NoDistinctPeriodsException("Payment periods should be distinct!");
+        }
+        return true;
     }
 
     @Override
