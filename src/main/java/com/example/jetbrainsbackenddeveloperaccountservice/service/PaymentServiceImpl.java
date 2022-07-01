@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
+
+    private final String DATE_FORMATTER = "mm-YYYY";
 
     private final UserService userService;
     private final PaymentRepository paymentRepository;
@@ -36,12 +39,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public boolean hasValidPeriod(PaymentDto paymentDto) {
-        return false;
+    public boolean hasDistinctPeriods(ArrayList<PaymentDto> paymentDtos) {
+        return paymentDtos.stream().map(PaymentDto::getPeriod).distinct().count() == paymentDtos.size();
     }
 
     @Override
-    public boolean hasValidSalary(PaymentDto paymentDto) {
-        return paymentDto.getSalary() > 0;
+    public boolean hasPositiveSalary(PaymentDto paymentDto) {
+        return paymentDto.getSalary() >= 0;
     }
 }

@@ -8,8 +8,6 @@ import java.time.format.DateTimeFormatter;
 @Table(name = "payments")
 public class Payment {
 
-    private final String DATE_FORMATTER = "mm-YYYY";
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

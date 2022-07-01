@@ -9,6 +9,7 @@ public class PaymentDto {
 
 
     private String email;
+    // TODO REGEX PATTERN XX-XXXX
     private String period;
     private Long salary;
 
