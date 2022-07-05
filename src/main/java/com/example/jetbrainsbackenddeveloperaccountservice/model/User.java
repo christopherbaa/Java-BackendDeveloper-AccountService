@@ -10,8 +10,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
+// TODO REARANGE USERDTOS
 
 @Entity
 @Table(name = "users")
@@ -35,29 +35,16 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Payment> payments;
-
-
     public User() {
     }
 
-    public User(Long id, String name, String lastname, String email, String password, UserRole role, Set<Payment> payments) {
+    public User(Long id, String name, String lastname, String email, String password, UserRole role) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.payments = payments;
-    }
-
-    public Set<Payment> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(Set<Payment> payments) {
-        this.payments = payments;
     }
 
     public Long getId() {

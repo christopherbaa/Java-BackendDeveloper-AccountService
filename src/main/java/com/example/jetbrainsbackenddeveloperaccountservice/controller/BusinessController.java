@@ -1,24 +1,22 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.controller;
 
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.PaymentDto;
+import com.example.jetbrainsbackenddeveloperaccountservice.dto.PaymentResponseDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.StatusMessage;
-import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserRegistrationDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.mapper.UserMapper;
-import com.example.jetbrainsbackenddeveloperaccountservice.model.Payment;
 import com.example.jetbrainsbackenddeveloperaccountservice.service.PaymentService;
 import com.example.jetbrainsbackenddeveloperaccountservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /*
     GET api/empl/payment gives access to the employee's payrolls;
@@ -42,12 +40,28 @@ public class BusinessController {
         this.userMapper = userMapper;
     }
 
+    @GetMapping(params = "period", path = "/api/empl/payment")
+    public ResponseEntity<PaymentResponseDto> getPayment(@RequestParam("period")
+                                                         Optional<String> period,
+                                                         Principal user) {
+
+        PaymentResponseDto payment = new PaymentResponseDto();
+        if (user != null && period.isPresent()) {
+            payment = this.paymentService.getPaymentMapper().toPaymentResponseDto(
+                    this.paymentService.getPaymentByEmailAndPeriod(user.getName(), period.get()));
+        }
+        return new ResponseEntity<>(payment, HttpStatus.OK);
+    }
+
     @GetMapping("/api/empl/payment")
-    public ResponseEntity<UserRegistrationDto> getPayment(Principal user) {
-        return  user != null ? new ResponseEntity<>(
-                new UserRegistrationDto(this.userService.findUserByEmail(user.getName())),
-                HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    public ResponseEntity<ArrayList<PaymentResponseDto>> getPayments(Principal user) {
+        ArrayList<PaymentResponseDto> payments = new ArrayList<>();
+        if (user != null) {
+            payments = this.paymentService.getPaymentByEmailSortedByPeriodDesc(user.getName()).stream()
+                    .map(p -> this.paymentService.getPaymentMapper().toPaymentResponseDto(p))
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
+        return new ResponseEntity<>(payments, HttpStatus.OK);
     }
 
     @PostMapping("/api/acct/payments")
@@ -56,10 +70,10 @@ public class BusinessController {
         return new ResponseEntity<>(new StatusMessage("Added successfully!"), HttpStatus.OK);
     }
 
-    // TODO Delete later
-    @GetMapping("/api/acct/payments")
-    public ArrayList<Payment> getPayments() {
-        return null;
+    @PutMapping("/api/acct/payments")
+    public ResponseEntity<StatusMessage> updatePayment(@Valid @RequestBody PaymentDto payment) {
+        this.paymentService.updatePayment(payment);
+        return new ResponseEntity<>(new StatusMessage("Updated successfully!"), HttpStatus.OK);
     }
 
 }

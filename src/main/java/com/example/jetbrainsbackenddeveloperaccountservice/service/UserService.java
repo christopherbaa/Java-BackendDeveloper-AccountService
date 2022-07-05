@@ -1,6 +1,5 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.service;
 
-import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserChangePassRequestDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserPassChangedDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.UserRegistrationDto;
 import com.example.jetbrainsbackenddeveloperaccountservice.mapper.UserMapper;

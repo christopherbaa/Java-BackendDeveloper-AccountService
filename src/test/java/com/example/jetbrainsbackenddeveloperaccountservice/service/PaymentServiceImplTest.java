@@ -1,6 +1,7 @@
 package com.example.jetbrainsbackenddeveloperaccountservice.service;
 
 import com.example.jetbrainsbackenddeveloperaccountservice.dto.PaymentDto;
+import com.example.jetbrainsbackenddeveloperaccountservice.exception.NoDistinctPeriodsException;
 import com.example.jetbrainsbackenddeveloperaccountservice.repository.PaymentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,13 +31,29 @@ class PaymentServiceImplTest {
     void setUp() {
 
         paymentsWithDistinctPeriodsAndPositiveSalary = new ArrayList<>(List.of(
-                new PaymentDto("test@test.com", "12-2008", 1000L),
-                new PaymentDto("johndoe@acme.com", "13-2008", 1000L)
+                new PaymentDto("test@test.com", "01-2008", 1000L),
+                new PaymentDto("test@test.com", "02-2008", 1000L),
+                new PaymentDto("test@test.com", "03-2008", 1000L),
+                new PaymentDto("test@test.com", "04-2008", 1000L),
+                new PaymentDto("test@test.com", "05-2008", 1000L),
+                new PaymentDto("test@test.com", "06-2008", 1000L),
+                new PaymentDto("johndoe@acme.com", "01-2008", 1000L),
+                new PaymentDto("johndoe@acme.com", "02-2008", 1000L),
+                new PaymentDto("johndoe@acme.com", "03-2008", 1000L),
+                new PaymentDto("johndoe@acme.com", "04-2008", 1000L)
         ));
 
         paymentsWithoutDistinctPeriodsAndNegativeSalary = new ArrayList<>(List.of(
-                new PaymentDto("test@test.com", "13-2008", -1L),
-                new PaymentDto("johndoe@acme.com", "13-2008", -1L)
+                new PaymentDto("test@test.com", "01-2008", -1L),
+                new PaymentDto("test@test.com", "02-2008", -1L),
+                new PaymentDto("test@test.com", "04-2008", 1000L),
+                new PaymentDto("test@test.com", "04-2008", 1000L),
+                new PaymentDto("test@test.com", "05-2008", 1000L),
+                new PaymentDto("test@test.com", "05-2008", 1000L),
+                new PaymentDto("johndoe@acme.com", "01-2008", 1000L),
+                new PaymentDto("johndoe@acme.com", "02-2008", 1000L),
+                new PaymentDto("johndoe@acme.com", "03-2008", -1L),
+                new PaymentDto("johndoe@acme.com", "03-2008", 1000L)
         ));
     }
 
@@ -46,8 +63,9 @@ class PaymentServiceImplTest {
     }
 
     @Test
-    void hasDistinctPeriods_ShouldBeFalse() {
-        assertFalse(paymentService.hasDistinctPeriods(paymentsWithoutDistinctPeriodsAndNegativeSalary));
+    void hasDistinctPeriods_ShouldThrowNoDistinctPeriodsException() {
+        assertThrows(NoDistinctPeriodsException.class, () ->
+                paymentService.hasDistinctPeriods(paymentsWithoutDistinctPeriodsAndNegativeSalary));
     }
 
 

@@ -10,75 +10,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(EmailExistsException.class)
-    public ResponseEntity<CustomErrorMessage> handleEmailExists(
-            EmailExistsException e, WebRequest request) {
-
-        CustomErrorMessage body = new CustomErrorMessage.Builder()
-                .setTimestamp(LocalDateTime.now())
-                .setStatus(HttpStatus.BAD_REQUEST.value())
-                .setError(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .setMessage("User exist!")
-                .setPath(request.getDescription(false).replace("uri=", ""))
-                .build();
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PasswordMatchesException.class)
-    public ResponseEntity<CustomErrorMessage> handlePasswordMatches(
-            PasswordMatchesException e, WebRequest request) {
-
-        CustomErrorMessage body = new CustomErrorMessage.Builder()
-                .setTimestamp(LocalDateTime.now())
-                .setStatus(HttpStatus.BAD_REQUEST.value())
-                .setError(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .setMessage("The passwords must be different!")
-                .setPath(request.getDescription(false).replace("uri=", ""))
-                .build();
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PasswordIsCompromisedException.class)
-    public ResponseEntity<CustomErrorMessage> handlePasswordIsCompromised(
-            PasswordIsCompromisedException e, WebRequest request) {
-
-        CustomErrorMessage body = new CustomErrorMessage.Builder()
-                .setTimestamp(LocalDateTime.now())
-                .setStatus(HttpStatus.BAD_REQUEST.value())
-                .setError(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .setMessage("The password is in the hacker's database!")
-                .setPath(request.getDescription(false).replace("uri=", ""))
-                .build();
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UserDoesNotExistException.class)
-    public ResponseEntity<CustomErrorMessage> handleUserDoesNotExist(
-            UserDoesNotExistException e, WebRequest request) {
-
-        CustomErrorMessage body = new CustomErrorMessage.Builder()
-                .setTimestamp(LocalDateTime.now())
-                .setStatus(HttpStatus.BAD_REQUEST.value())
-                .setError(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .setMessage(e.getMessage() + " not found!")
-                .setPath(request.getDescription(false).replace("uri=", ""))
-                .build();
-
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(NoDistinctPeriodsException.class)
-    public ResponseEntity<CustomErrorMessage> handleNoDistinctPeriods(
-            NoDistinctPeriodsException e, WebRequest request) {
+    @ExceptionHandler({EmailExistsException.class, NoDistinctPeriodsException.class,
+    NoValidPeriodException.class, PasswordIsCompromisedException.class,
+    PasswordMatchesException.class, PaymentNotFoundException.class,
+    UserDoesNotExistException.class, ConstraintViolationException.class})
+    public ResponseEntity<CustomErrorMessage> handleRuntimeException(
+            RuntimeException e, WebRequest request) {
 
         CustomErrorMessage body = new CustomErrorMessage.Builder()
                 .setTimestamp(LocalDateTime.now())

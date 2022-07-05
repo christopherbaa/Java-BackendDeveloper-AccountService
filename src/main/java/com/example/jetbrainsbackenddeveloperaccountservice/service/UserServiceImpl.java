@@ -34,21 +34,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserRegistrationDto registerUser(User user) {
+    public UserRegistrationDto registerUser(User user) throws EmailExistsException, PasswordIsCompromisedException {
         if(!isCompromised(user.getPassword())) {
             if(this.userRepository.existsUserByEmailIgnoreCase(user.getEmail())) {
-                throw new EmailExistsException();
+                throw new EmailExistsException("User exist!");
             }
             this.userRepository.save(userMapper.toUserWithEncryptedPw(user));
             return userMapper.toUserRegistrationDto(this.findUserByEmail(user.getEmail()));
         }
-        throw new PasswordIsCompromisedException();
+        throw new PasswordIsCompromisedException("The password is in the hacker's database!");
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         if(!this.userRepository.existsUserByEmailIgnoreCase(email)) {
-            throw new UsernameNotFoundException(email);
+            throw new UsernameNotFoundException(email + " not Found!");
         }
         return this.findUserByEmail(email);
     }
@@ -73,9 +73,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 this.userRepository.save(user);
                 return new UserPassChangedDto(user);
             }
-            throw new PasswordMatchesException();
+            throw new PasswordMatchesException("Please use a new password!");
         }
-        throw new PasswordIsCompromisedException();
+        throw new PasswordIsCompromisedException("The password is in the hacker's database!");
     }
 
     @Override
